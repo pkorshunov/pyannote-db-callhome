@@ -64,8 +64,15 @@ class CallHomeProtocol(SpeakerDiarizationProtocol):
             }
 
     def tst_iter(self):
-        for _ in []:
-            yield
+        data_dir = op.join(op.dirname(op.realpath(__file__)), 'data')
+        annotations = MDTMParser().read(op.join(data_dir, 'callhome.test.mdtm'))
+        for uri in sorted(annotations.uris):
+            annotation = annotations(uri)
+            yield {
+                'database': 'CallHome',
+                'uri': uri,
+                'annotation': annotation,
+            }
 
 
 class CallHome(Database):
