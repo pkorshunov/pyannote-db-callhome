@@ -36,6 +36,7 @@ import os.path as op
 from pyannote.database import Database
 from pyannote.database.protocol import SpeakerDiarizationProtocol
 from pyannote.parser.annotation.mdtm import MDTMParser
+from pyannote.core import Timeline
 
 
 class CallHomeProtocol(SpeakerDiarizationProtocol):
@@ -46,10 +47,14 @@ class CallHomeProtocol(SpeakerDiarizationProtocol):
         annotations = MDTMParser().read(op.join(data_dir, 'callhome.train.mdtm'))
         for uri in sorted(annotations.uris):
             annotation = annotations(uri)
+            uri = 'en_' + uri
+            annotation.uri = uri  # update uri
             yield {
                 'database': 'CallHome',
                 'uri': uri,
                 'annotation': annotation,
+                # annotated part as pyannote.core.Timeline instance
+                'annotated': Timeline(uri=uri, segments=[annotation.get_timeline().extent()])
             }
 
     def dev_iter(self):
@@ -57,10 +62,14 @@ class CallHomeProtocol(SpeakerDiarizationProtocol):
         annotations = MDTMParser().read(op.join(data_dir, 'callhome.validation.mdtm'))
         for uri in sorted(annotations.uris):
             annotation = annotations(uri)
+            uri = 'en_' + uri
+            annotation.uri = uri  # update uri
             yield {
                 'database': 'CallHome',
                 'uri': uri,
                 'annotation': annotation,
+                # annotated part as pyannote.core.Timeline instance
+                'annotated': Timeline(uri=uri, segments=[annotation.get_timeline().extent()])
             }
 
     def tst_iter(self):
@@ -68,10 +77,14 @@ class CallHomeProtocol(SpeakerDiarizationProtocol):
         annotations = MDTMParser().read(op.join(data_dir, 'callhome.test.mdtm'))
         for uri in sorted(annotations.uris):
             annotation = annotations(uri)
+            uri = 'en_' + uri
+            annotation.uri = uri  # update uri
             yield {
                 'database': 'CallHome',
                 'uri': uri,
                 'annotation': annotation,
+                # annotated part as pyannote.core.Timeline instance
+                'annotated': Timeline(uri=uri, segments=[annotation.get_timeline().extent()])
             }
 
 
